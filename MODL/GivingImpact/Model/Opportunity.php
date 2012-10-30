@@ -1,0 +1,124 @@
+<?php
+
+namespace MODL\GivingImpact\Model;
+use MODL\GivingImpact\Exception as GIException;
+
+class Opportunity extends \MODL\GivingImpact\Model {
+
+    public $id_token = false;
+    public $campaign_token = false;
+    public $title = false;
+    public $description = false;
+    public $youtube_id = false;
+    public $donation_total = false;
+    public $donation_target = false;
+    public $givlink = false;
+    public $donation_url = false;
+    public $share_url = false;
+    public $shares_fb = false;
+    public $shares_twitter = false;
+    public $hash_tag = false;
+    public $status = false;
+    public $has_campaign_levels = false;
+    public $campaign_levels = false;
+    public $image_url = false;
+    public $custom_fields = false;
+    public $widget = false;
+    public $campaign = false;
+
+	protected $path = 'v2/opportunities';
+
+    private $stack = array();
+
+	public function __construct($c, $data = false) {
+		$this->container = $c;
+
+		if( $data ) {
+		    $this->assign($data);
+		}
+	}
+
+    public function create($data) {
+
+        if( !is_array($data) ) {
+            throw new GIException('Expected array');
+            return;
+        }
+
+        if( !array_key_exists('campaign_token', $data)
+            || !$data['campaign_token'] ) {
+
+            throw new GIException('No parent campaign found');
+            return;
+        }
+
+        $data['campaign_token'] = $data['campaign_token'];
+
+        $rc = $this->container->restClient;
+        $rc->url = sprintf(
+            '%s/%s', $rc->url, $this->path
+        );
+
+        $return = $rc->post($data);
+
+        return new $this($this->container, $return->opportunity);
+    }
+
+	public function fetch($token = false) {
+		if( $token ) {
+			$data = parent::fetch($token);
+            return new $this($this->container, $data->opportunity);
+		}
+
+        if( !$this->campaign_token ) {
+            throw new GIException('Parent campaign token required');
+            return;
+        }
+
+		$rc = $this->container->restClient;
+		$rc->url = sprintf(
+		    '%s/v2/campaigns/%s/opportunities',
+		    $rc->url,
+		    $this->campaign_token
+		);
+
+		$data = $rc->get($this->properties);
+		$out = array();
+
+		foreach( $data->opportunities as $o ) {
+		    $out[] = new $this($this->container, $o);
+		}
+
+		return $out;
+	}
+
+	public function campaign($token) {
+	    $this->campaign_token = $token;
+
+	    return $this;
+	}
+
+    public function __donations() {
+        if( !$this->id_token ) {
+            return false;
+        }
+
+        if( array_key_exists('donations', $this->stack) ) {
+            return $this->stack['donations'];
+        }
+
+        $donations = $this->container->donation
+            ->opportunity($this->id_token);
+
+        $this->stack['donations'] = $donations;
+
+        return $donations;
+    }
+
+    public function __get($k) {
+        $f = sprintf('__%s', $k);
+        if( is_callable(array($this, $f)) ) {
+            return call_user_func(array($this, $f));
+        }
+    }
+}
