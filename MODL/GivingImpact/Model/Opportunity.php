@@ -52,11 +52,30 @@ class Opportunity extends \MODL\GivingImpact\Model {
             return;
         }
 
-        $data['campaign_token'] = $data['campaign_token'];
-
         $rc = $this->container->restClient;
         $rc->url = sprintf(
             '%s/%s', $rc->url, $this->path
+        );
+
+        $return = $rc->post($data);
+
+        return new $this($this->container, $return->opportunity);
+    }
+
+    public function save() {
+        if( !$this->id_token ) {
+            throw new GIException('Please use create method');
+            return;
+        }
+
+        $data = array();
+        foreach( $this->publicProperties() as $prop ) {
+            $data[$prop] = $this->$prop;
+        }
+
+        $rc = $this->container->restClient;
+        $rc->url = sprintf(
+            '%s/%s/%s', $rc->url, $this->path, $this->id_token
         );
 
         $return = $rc->post($data);

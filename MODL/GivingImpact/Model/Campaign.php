@@ -56,6 +56,27 @@ class Campaign extends \MODL\GivingImpact\Model {
         return new $this($this->container, $return->campaign);
     }
 
+    public function save() {
+        if( !$this->id_token ) {
+            throw new GIException('Please use create method');
+            return;
+        }
+
+        $data = array();
+        foreach( $this->publicProperties() as $prop ) {
+            $data[$prop] = $this->$prop;
+        }
+
+        $rc = $this->container->restClient;
+        $rc->url = sprintf(
+            '%s/%s/%s', $rc->url, $this->path, $this->id_token
+        );
+
+        $return = $rc->post($data);
+
+        return new $this($this->container, $return->campaign);
+    }
+
 	public function fetch($token = false) {
 		if( $token ) {
 			$data = parent::fetch($token);
