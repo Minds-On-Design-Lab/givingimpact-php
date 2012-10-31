@@ -14,6 +14,12 @@ class Model {
 		'status' => false
 	);
 
+	public function publicProperties() {
+		$v = create_function('', '$o = new '.get_class($this).'; return get_object_vars($o);');
+
+		return array_keys($v());
+	}
+
 	public function assign($obj) {
 		foreach(get_object_vars($obj) as $k => $v) {
 			$this->$k = $v;
