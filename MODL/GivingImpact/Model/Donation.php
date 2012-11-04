@@ -45,13 +45,14 @@ class Donation extends \MODL\GivingImpact\Model {
             return false;
 		}
 
-        if( !$this->campaign_token && !$this->opportunity_token ) {
-            throw new GIException('Parent campaign token required');
-            return;
-        }
-
 		$rc = $this->container->restClient;
-		if( $this->campaign_token ) {
+
+        if( !$this->campaign_token && !$this->opportunity_token ) {
+            $rc->url = sprintf(
+                '%s/v2/donations',
+                $rc->url
+            );
+        } elseif( $this->campaign_token ) {
             $rc->url = sprintf(
                 '%s/v2/campaigns/%s/donations',
                 $rc->url,
