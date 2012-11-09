@@ -77,6 +77,29 @@ class Donation extends \MODL\GivingImpact\Model {
 		return $out;
 	}
 
+    public function create($data) {
+
+        if( !is_array($data) ) {
+            throw new GIException('Expected array');
+            return;
+        }
+
+        if( !array_key_exists('campaign', $data) && !array_key_exists('opportunity', $data) ) {
+            throw new GIException('No parent campaign found');
+            return;
+        }
+
+        $rc = $this->container->restClient;
+        $rc->url = sprintf(
+            '%s/v2/donations',
+            $rc->url
+        );
+
+        $return = $rc->post($data);
+
+        return new $this($this->container, $return->donation);
+    }
+
 	public function campaign($token) {
 	    $this->campaign_token = $token;
 
