@@ -26,6 +26,7 @@ class Campaign extends \MODL\GivingImpact\Model {
     public $image_url = false;
     public $custom_fields = false;
     public $widget = false;
+    public $donation_minimum = false;
 
 	protected $path = 'v2/campaigns';
 
