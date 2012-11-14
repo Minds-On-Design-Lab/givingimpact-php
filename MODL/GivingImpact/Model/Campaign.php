@@ -27,6 +27,17 @@ class Campaign extends \MODL\GivingImpact\Model {
     public $custom_fields = false;
     public $widget = false;
     public $donation_minimum = false;
+    public $send_receipt = false;
+    public $email_org_name = false;
+    public $reply_to_address = false;
+    public $bcc_address = false;
+    public $street_address = false;
+    public $street_address_2 = false;
+    public $city = false;
+    public $state = false;
+    public $postal_code = false;
+    public $country = false;
+    public $receipt = false;
 
 	protected $path = 'v2/campaigns';
 
