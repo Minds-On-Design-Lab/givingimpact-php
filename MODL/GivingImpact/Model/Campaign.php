@@ -21,8 +21,8 @@ class Campaign extends \MODL\GivingImpact\Model {
     public $has_giving_opportunities = false;
     public $display_total = false;
     public $display_current = false;
-    public $has_campaign_levels = false;
-    public $campaign_levels = false;
+    public $has_donation_levels = false;
+    public $donation_levels = false;
     public $image_url = false;
     public $custom_fields = false;
     public $widget = false;
