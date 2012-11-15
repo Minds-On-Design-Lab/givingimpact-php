@@ -15,7 +15,7 @@ class Model {
 	);
 
 	public function publicProperties() {
-		$v = create_function('', '$o = new '.get_class($this).'; return get_object_vars($o);');
+		$v = create_function('', '$o = new '.get_class($this).'(null); return get_object_vars($o);');
 
 		return array_keys($v());
 	}
