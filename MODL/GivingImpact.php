@@ -18,6 +18,7 @@ use MODL\GivingImpact\RestClient as RestClient;
 use MODL\GivingImpact\Model\Campaign as Campaign;
 use MODL\GivingImpact\Model\Opportunity as Opportunity;
 use MODL\GivingImpact\Model\Donation as Donation;
+use MODL\GivingImpact\Model\Stats as Stats;
 
 require_once dirname(__FILE__).'/GivingImpact/Exception.php';
 require_once dirname(__FILE__).'/GivingImpact/RestClient.php';
@@ -26,6 +27,7 @@ require_once dirname(__FILE__).'/GivingImpact/Model.php';
 require_once dirname(__FILE__).'/GivingImpact/Model/Campaign.php';
 require_once dirname(__FILE__).'/GivingImpact/Model/Opportunity.php';
 require_once dirname(__FILE__).'/GivingImpact/Model/Donation.php';
+require_once dirname(__FILE__).'/GivingImpact/Model/Stats.php';
 
 class GivingImpact {
 
@@ -78,6 +80,9 @@ class GivingImpact {
 		};
 		$this->donation = function($_) {
 			return new Donation($_);
+		};
+		$this->stats = function($_) {
+			return new Stats($_);
 		};
 
 	}
