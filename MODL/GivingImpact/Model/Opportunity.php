@@ -134,6 +134,22 @@ class Opportunity extends \MODL\GivingImpact\Model {
         return $donations;
     }
 
+    public function __stats() {
+        if( !$this->id_token ) {
+            return false;
+        }
+        if( array_key_exists('stats', $this->stack ) ) {
+            return $this->stack['stats'];
+        }
+
+        $stats = $this->container->stats
+            ->opportunity($this->id_token);
+
+        $this->stack['stats'] = $stats;
+
+        return $stats;
+    }
+
     public function __get($k) {
         $f = sprintf('__%s', $k);
         if( is_callable(array($this, $f)) ) {

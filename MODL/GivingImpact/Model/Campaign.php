@@ -148,4 +148,20 @@ class Campaign extends \MODL\GivingImpact\Model {
         return $donations;
     }
 
+    public function __stats() {
+        if( !$this->id_token ) {
+            return false;
+        }
+        if( array_key_exists('stats', $this->stack ) ) {
+            return $this->stack['stats'];
+        }
+
+        $stats = $this->container->stats
+            ->campaign($this->id_token);
+
+        $this->stack['stats'] = $stats;
+
+        return $stats;
+    }
+
 }
