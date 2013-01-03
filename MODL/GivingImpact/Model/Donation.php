@@ -42,7 +42,11 @@ class Donation extends \MODL\GivingImpact\Model {
 
 	public function fetch($token = false) {
 		if( $token ) {
-            return false;
+            $rc = $this->container->restClient;
+            $rc->url = $rc->url.'/v2/donations/'.$token;
+
+            $data = $rc->get($this->properties);
+            return new $this($this->container, $data->donation);
 		}
 
 		$rc = $this->container->restClient;
