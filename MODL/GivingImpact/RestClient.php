@@ -55,6 +55,11 @@ class RestClient {
 
 		$return = json_decode($raw_json);
 
+        if( !is_object($return) ) {
+            throw new GIException($raw_json);
+            return;
+        }
+
 		if( $return->error ) {
 			throw new GIException($return->message);
 			return;
