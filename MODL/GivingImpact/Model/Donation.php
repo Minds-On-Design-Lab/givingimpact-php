@@ -24,6 +24,7 @@ class Donation extends \MODL\GivingImpact\Model {
     public $campaign = false;
     public $opportunity = false;
     public $custom_responses = false;
+    public $donation_date = false;
 
 	protected $path = false;
 
@@ -97,6 +98,27 @@ class Donation extends \MODL\GivingImpact\Model {
         $rc->url = sprintf(
             '%s/v2/donations',
             $rc->url
+        );
+
+        $return = $rc->post($data);
+
+        return new $this($this->container, $return->donation);
+    }
+
+    public function save() {
+        if( !$this->id_token ) {
+            throw new GIException('Please use create method');
+            return;
+        }
+
+        $data = array();
+        foreach( $this->publicProperties() as $prop ) {
+            $data[$prop] = $this->$prop;
+        }
+
+        $rc = $this->container->restClient;
+        $rc->url = sprintf(
+            '%s/v2/donations/%s', $rc->url, $this->id_token
         );
 
         $return = $rc->post($data);
