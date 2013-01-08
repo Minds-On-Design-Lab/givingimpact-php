@@ -39,6 +39,9 @@ class Campaign extends \MODL\GivingImpact\Model {
     public $country = false;
     public $receipt = false;
 
+    public $image_type = false;
+    public $image_file = false;
+
 	protected $path = 'v2/campaigns';
 
     private $stack = array();
