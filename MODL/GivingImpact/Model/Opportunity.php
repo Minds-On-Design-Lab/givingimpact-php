@@ -26,6 +26,9 @@ class Opportunity extends \MODL\GivingImpact\Model {
     public $widget = false;
     public $campaign = false;
 
+    public $image_type = false;
+    public $image_file = false;
+
 	protected $path = 'v2/opportunities';
 
     private $stack = array();
