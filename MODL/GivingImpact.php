@@ -4,12 +4,27 @@
  *
  * Simple, fluent interface to the Giving Impact API
  *
+ * 	<pre>
+ *  	$API = new \MODL\GivingImpact(
+ *          'My-User-Agent', 'MY-GI-API-KEY'
+ *      );
+ *
+ *      $campaign = $API
+ *      	->campaign
+ *      	->fetch('XXXXX');
+ *
+ *      $stats = $campaign
+ *      	->stats
+ *      	->limit($max+1)
+ *      	->offset($offset)
+ *      	->fetch();
+ * 	</pre>
+ *
  * @package        	GivingImpact
  * @subpackage    	Libraries
  * @category    	Libraries
  * @author        	Minds on Design Lab, Inc.
  * @created			10/01/2012
- * @license         #
  */
 
 namespace MODL;
@@ -18,6 +33,7 @@ use MODL\GivingImpact\RestClient as RestClient;
 use MODL\GivingImpact\Model\Campaign as Campaign;
 use MODL\GivingImpact\Model\Opportunity as Opportunity;
 use MODL\GivingImpact\Model\Donation as Donation;
+use MODL\GivingImpact\Model\Stats as Stats;
 
 require_once dirname(__FILE__).'/GivingImpact/Exception.php';
 require_once dirname(__FILE__).'/GivingImpact/RestClient.php';
@@ -26,15 +42,31 @@ require_once dirname(__FILE__).'/GivingImpact/Model.php';
 require_once dirname(__FILE__).'/GivingImpact/Model/Campaign.php';
 require_once dirname(__FILE__).'/GivingImpact/Model/Opportunity.php';
 require_once dirname(__FILE__).'/GivingImpact/Model/Donation.php';
+require_once dirname(__FILE__).'/GivingImpact/Model/Stats.php';
 
+/**
+ * GivingImpact library base class, also provides dependency injector
+ *
+ * @class GivingImpact
+ * @namespace  \MODL\GivingImpact
+ */
 class GivingImpact {
 
+	/**
+	 * Base components for dependency injector
+	 * @var array
+	 */
 	protected $components = array(
 		'end_point'		=> 'givingimpact.com/api',
 		'user_agent'	=> 'Test UA',
 		'api_key'		=> false,
 	);
 
+	/**
+	 * Constructor
+	 * @param String $user_agent
+	 * @param String $api_key
+	 */
 	public function __construct($user_agent, $api_key) {
 
 		$this->user_agent = $user_agent;
@@ -54,6 +86,11 @@ class GivingImpact {
 		$this->initialize();
 	}
 
+	/**
+	 * Initialize the dependency injector. Loads the REST client
+	 * and models with base DI object.
+	 *
+	 */
 	public function initialize() {
 
 		// build and return new rest client with proper settings
@@ -78,6 +115,9 @@ class GivingImpact {
 		};
 		$this->donation = function($_) {
 			return new Donation($_);
+		};
+		$this->stats = function($_) {
+			return new Stats($_);
 		};
 
 	}

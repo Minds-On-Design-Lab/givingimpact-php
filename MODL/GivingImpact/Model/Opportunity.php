@@ -3,6 +3,27 @@
 namespace MODL\GivingImpact\Model;
 use MODL\GivingImpact\Exception as GIException;
 
+/**
+ * Opportunity model
+ *
+ *  <pre>
+ *      $campaign = $API
+ *          ->campaign
+ *          ->limit(1)
+ *          ->fetch();
+ *
+ *      $opportunities = $campaign
+ *          ->opportunities
+ *          ->sort('title')
+ *          ->status('both')
+ *          ->fetch();
+ *
+ *  </pre>
+ *
+ * @class Opportunity
+ * @extends  \MODL\GivingImpact\Model
+ * @namespace  \MODL\GivingImpact\Model
+ */
 class Opportunity extends \MODL\GivingImpact\Model {
 
     public $id_token = false;
@@ -25,6 +46,10 @@ class Opportunity extends \MODL\GivingImpact\Model {
     public $custom_fields = false;
     public $widget = false;
     public $campaign = false;
+    public $analytics_id = false;
+
+    public $image_type = false;
+    public $image_file = false;
 
 	protected $path = 'v2/opportunities';
 
@@ -38,6 +63,13 @@ class Opportunity extends \MODL\GivingImpact\Model {
 		}
 	}
 
+    /**
+     * Create new opportunity
+     *
+     * @throws MODL\GivingImpact\Exception If $data is not array
+     * @param  Array $data
+     * @return Object
+     */
     public function create($data) {
 
         if( !is_array($data) ) {
@@ -62,6 +94,12 @@ class Opportunity extends \MODL\GivingImpact\Model {
         return new $this($this->container, $return->opportunity);
     }
 
+    /**
+     * Save existing opportunity
+     *
+     * @throws MODL\GivingImpact\Exception If ID_TOKEN is not set
+     * @return Object
+     */
     public function save() {
         if( !$this->id_token ) {
             throw new GIException('Please use create method');
@@ -83,6 +121,11 @@ class Opportunity extends \MODL\GivingImpact\Model {
         return new $this($this->container, $return->opportunity);
     }
 
+    /**
+     * Fetches opportunity data from API
+     * @param  boolean $token
+     * @return Array
+     */
 	public function fetch($token = false) {
 		if( $token ) {
 			$data = parent::fetch($token);
@@ -111,12 +154,21 @@ class Opportunity extends \MODL\GivingImpact\Model {
 		return $out;
 	}
 
+    /**
+     * Set parent campaign
+     * @param  String $token
+     * @return Object        this
+     */
 	public function campaign($token) {
 	    $this->campaign_token = $token;
 
 	    return $this;
 	}
 
+    /**
+     * Donations computed property
+     * @return Array of donations
+     */
     public function __donations() {
         if( !$this->id_token ) {
             return false;
@@ -132,6 +184,27 @@ class Opportunity extends \MODL\GivingImpact\Model {
         $this->stack['donations'] = $donations;
 
         return $donations;
+    }
+
+    /**
+     * Stats computed property
+     *
+     * @return Array of stats
+     */
+    public function __stats() {
+        if( !$this->id_token ) {
+            return false;
+        }
+        if( array_key_exists('stats', $this->stack ) ) {
+            return $this->stack['stats'];
+        }
+
+        $stats = $this->container->stats
+            ->opportunity($this->id_token);
+
+        $this->stack['stats'] = $stats;
+
+        return $stats;
     }
 
     public function __get($k) {

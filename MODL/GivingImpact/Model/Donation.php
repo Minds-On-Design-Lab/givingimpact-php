@@ -3,6 +3,24 @@
 namespace MODL\GivingImpact\Model;
 use MODL\GivingImpact\Exception as GIException;
 
+/**
+ * Donation model
+ *
+ * This model implements a fluent interface
+ *
+ *  <pre>
+ *      $donations = $API
+ *          ->donation
+ *          ->limit(10)
+ *          ->related(true)
+ *          ->sort('created_at|desc')
+ *          ->fetch();
+ *  </pre>
+ *
+ * @class Donation
+ * @extends  \MODL\GivingImpact\Model
+ * @namespace \Model\GivingImpact\Model
+ */
 class Donation extends \MODL\GivingImpact\Model {
 
     public $first_name = false;
@@ -24,6 +42,7 @@ class Donation extends \MODL\GivingImpact\Model {
     public $campaign = false;
     public $opportunity = false;
     public $custom_responses = false;
+    public $donation_date = false;
 
 	protected $path = false;
 
@@ -40,9 +59,18 @@ class Donation extends \MODL\GivingImpact\Model {
 		}
 	}
 
+    /**
+     * Fetch donation based
+     * @param  boolean $token OPTIONAL
+     * @return Array OR Object
+     */
 	public function fetch($token = false) {
 		if( $token ) {
-            return false;
+            $rc = $this->container->restClient;
+            $rc->url = $rc->url.'/v2/donations/'.$token;
+
+            $data = $rc->get($this->properties);
+            return new $this($this->container, $data->donation);
 		}
 
 		$rc = $this->container->restClient;
@@ -77,6 +105,13 @@ class Donation extends \MODL\GivingImpact\Model {
 		return $out;
 	}
 
+    /**
+     * Create new offline donation
+     *
+     * @throws MODL\GivingImpact\Exception If $data is not array
+     * @param  Array $data
+     * @return Object
+     */
     public function create($data) {
 
         if( !is_array($data) ) {
@@ -100,12 +135,49 @@ class Donation extends \MODL\GivingImpact\Model {
         return new $this($this->container, $return->donation);
     }
 
+    /**
+     * Save edited donation
+     *
+     * @throws MODL\GivingImpact\Exception If no ID_TOKEN is set
+     * @return Object
+     */
+    public function save() {
+        if( !$this->id_token ) {
+            throw new GIException('Please use create method');
+            return;
+        }
+
+        $data = array();
+        foreach( $this->publicProperties() as $prop ) {
+            $data[$prop] = $this->$prop;
+        }
+
+        $rc = $this->container->restClient;
+        $rc->url = sprintf(
+            '%s/v2/donations/%s', $rc->url, $this->id_token
+        );
+
+        $return = $rc->post($data);
+
+        return new $this($this->container, $return->donation);
+    }
+
+    /**
+     * Set parent campaign
+     * @param  String $token
+     * @return Object this
+     */
 	public function campaign($token) {
 	    $this->campaign_token = $token;
 
 	    return $this;
 	}
 
+    /**
+     * Set parent opportunity
+     * @param  String $token
+     * @return Object        this
+     */
 	public function opportunity($token) {
 	    $this->opportunity_token = $token;
 

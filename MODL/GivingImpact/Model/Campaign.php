@@ -3,6 +3,23 @@
 namespace MODL\GivingImpact\Model;
 use MODL\GivingImpact\Exception as GIException;
 
+/**
+ * Campaign model
+ *
+ * Campaign model provides a fluent interface
+ *
+ *  <pre>
+ *      $campaigns = $API
+ *          ->campaign
+ *          ->status('active')
+ *          ->limit(10)
+ *          ->fetch();
+ *  </pre>
+ *
+ * @class Campaign
+ * @extends  \MODL\GivingImpact\Model
+ * @namespace  \MODL\GivingImpact\Model
+ */
 class Campaign extends \MODL\GivingImpact\Model {
 
     public $id_token = false;
@@ -38,6 +55,10 @@ class Campaign extends \MODL\GivingImpact\Model {
     public $postal_code = false;
     public $country = false;
     public $receipt = false;
+    public $analytics_id = false;
+
+    public $image_type = false;
+    public $image_file = false;
 
 	protected $path = 'v2/campaigns';
 
@@ -51,6 +72,16 @@ class Campaign extends \MODL\GivingImpact\Model {
 		}
 	}
 
+    /**
+     * Create new campaign
+     *  <pre>
+     *      $model->create(array('title' => 'Testing'));
+     *  </pre>
+     *
+     * @throws MODL\GivingImpact\Exception If $data is not array
+     * @param  Array $data
+     * @return Object
+     */
     public function create($data) {
 
         if( !is_array($data) ) {
@@ -68,6 +99,18 @@ class Campaign extends \MODL\GivingImpact\Model {
         return new $this($this->container, $return->campaign);
     }
 
+    /**
+     * Save existing campaign
+     *
+     *  <pre>
+     *      $campaign = $campaign->fetch('XXXX');
+     *      $campaign->title = 'Foo';
+     *      $campaign->save();
+     *  </pre>
+     *
+     * @throws MODL\GivingImpact\Exception If campaign has no ID_TOKEN
+     * @return Object this
+     */
     public function save() {
         if( !$this->id_token ) {
             throw new GIException('Please use create method');
@@ -89,6 +132,11 @@ class Campaign extends \MODL\GivingImpact\Model {
         return new $this($this->container, $return->campaign);
     }
 
+    /**
+     * Fetch campaigns via api
+     * @param  boolean $token OPTIONAL
+     * @return Array
+     */
 	public function fetch($token = false) {
 		if( $token ) {
 			$data = parent::fetch($token);
@@ -114,6 +162,11 @@ class Campaign extends \MODL\GivingImpact\Model {
         }
     }
 
+    /**
+     * Opportunities computed property. Automatically fetch, format and return
+     * child opportunities from API connection
+     * @return Array
+     */
     public function __opportunities() {
         if( !$this->id_token ) {
             return false;
@@ -131,6 +184,11 @@ class Campaign extends \MODL\GivingImpact\Model {
         return $opps;
     }
 
+    /**
+     * Donations computed property. Automatically fetches and processes donations
+     * from the API
+     * @return Array
+     */
     public function __donations() {
         if( !$this->id_token ) {
             return false;
@@ -146,6 +204,26 @@ class Campaign extends \MODL\GivingImpact\Model {
         $this->stack['donations'] = $donations;
 
         return $donations;
+    }
+
+    /**
+     * Stats computed property. Automatically fetches and processes stats
+     * @return Array
+     */
+    public function __stats() {
+        if( !$this->id_token ) {
+            return false;
+        }
+        if( array_key_exists('stats', $this->stack ) ) {
+            return $this->stack['stats'];
+        }
+
+        $stats = $this->container->stats
+            ->campaign($this->id_token);
+
+        $this->stack['stats'] = $stats;
+
+        return $stats;
     }
 
 }

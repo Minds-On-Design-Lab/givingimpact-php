@@ -3,20 +3,71 @@
 namespace MODL\GivingImpact;
 use MODL\GivingImpact\Exception as GIException;
 
+/**
+ * REST API Client base. Uses cURL library to communicate with API
+ *
+ * 	<pre>
+ *  	$client = new \MODL\GivingImpact\RestClient
+ *  	$client->url = 'http://base.url';
+ *
+ * 		$return = $client->get(data('sort'=>'created|asc'));
+ * 	</pre>
+ *
+ * @class RestClient
+ * @namespace  \MODL\GivingImpact
+ */
 class RestClient {
 
+	/**
+	 * Base URL
+	 * @var boolean
+	 */
 	public $url = false;
+
+	/**
+	 * Heaer stack
+	 * @var array
+	 */
 	public $headers = array();
+
+	/**
+	 * Optional port
+	 * @var boolean
+	 */
 	public $port = false;
+
+	/**
+	 * Base user agent string (default is "MODL Client")
+	 * @var string
+	 */
 	public $user_agent = 'MODL Client';
 
+	/**
+	 * Dependency injection container
+	 * @var Object
+	 */
 	private $container = false;
 
+	/**
+	 * Constructor
+	 * @param Object $c Dependency injector
+	 */
 	public function __construct($c) {
 		$this->container = $c;
 
 	}
 
+	/**
+	 * Construct a fully qualified URL with path and optional key/value arguments
+	 *
+	 * 	<pre>
+	 *  	echo $client->buildURL('donations/XXX', array('foo'=>'bar'));
+	 *  	// base.url/donations/XXX?foo=bar
+	 * 	</pre>
+	 * @param  String $path URL path WITHOUT base URL
+	 * @param  array  $args GET arguments
+	 * @return String
+	 */
 	public function buildURL($path, $args = array()) {
 		if( !$this->url ) {
 			throw new GIException('URL is not defined');
@@ -32,6 +83,11 @@ class RestClient {
 		);
 	}
 
+	/**
+	 * Perform a GET action
+	 * @param  Array $data OPTIONAL data to send in GET
+	 * @return Object        JSON decoded object
+	 */
 	public function get($data = false) {
 
 		if( $data ) {
@@ -50,10 +106,20 @@ class RestClient {
 
 	}
 
+	/**
+	 * Perform a POST action
+	 * @param  Array $data POST data
+	 * @return Object       JSON decoded object
+	 */
 	public function post($data) {
 		$raw_json = $this->curlFetch($data);
 
 		$return = json_decode($raw_json);
+
+        if( !is_object($return) ) {
+            throw new GIException($raw_json);
+            return;
+        }
 
 		if( $return->error ) {
 			throw new GIException($return->message);
@@ -63,6 +129,13 @@ class RestClient {
 		return $return;
 	}
 
+	/**
+	 * Query REST resource, you should not have to call this method manually,
+	 * as it is called by the get and post methods.
+	 *
+	 * @param  Mixed $data
+	 * @return String
+	 */
 	public function curlFetch($data = false) {
 		if( $data ) {
 			$data = json_encode($data);
