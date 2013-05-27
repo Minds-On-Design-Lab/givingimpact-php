@@ -33,23 +33,19 @@ class Opportunity extends \MODL\GivingImpact\Model {
     public $youtube_id = false;
     public $donation_total = false;
     public $donation_target = false;
-    public $givlink = false;
     public $donation_url = false;
     public $share_url = false;
     public $shares_fb = false;
     public $shares_twitter = false;
     public $hash_tag = false;
     public $status = false;
-    public $has_campaign_levels = false;
-    public $campaign_levels = false;
+    public $enable_donation_levels = false;
+    public $donation_levels = false;
     public $image_url = false;
     public $custom_fields = false;
     public $widget = false;
     public $campaign = false;
     public $analytics_id = false;
-
-    public $image_type = false;
-    public $image_file = false;
 
     public $image_type = false;
     public $image_file = false;

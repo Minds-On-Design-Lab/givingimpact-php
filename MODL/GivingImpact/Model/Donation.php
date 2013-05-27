@@ -30,7 +30,7 @@ class Donation extends \MODL\GivingImpact\Model {
     public $billing_state = false;
     public $billing_postal_code = false;
     public $billing_country = false;
-    public $individual_total = false;
+    public $donation_total = false;
     public $donation_level = false;
     public $contact = false;
     public $email_address = false;

@@ -25,6 +25,7 @@
  * @category    	Libraries
  * @author        	Minds on Design Lab, Inc.
  * @created			10/01/2012
+ * @license         #
  */
 
 namespace MODL;
