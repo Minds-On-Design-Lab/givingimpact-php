@@ -13,10 +13,10 @@ use MODL\GivingImpact\Exception as GIException;
 class Stats extends \MODL\GivingImpact\Model {
 
     public $date = false;
-    public $donation_count = false;
+    public $total_donations = false;
     public $donation_total = false;
-    public $facebook_shares = false;
-    public $twitter_shares = false;
+    public $shares_fb = false;
+    public $shares_twitter = false;
 
     private $stack = array();
 
