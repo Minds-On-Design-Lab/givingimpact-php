@@ -145,14 +145,14 @@ class RestClient {
 
 		$ch = curl_init();
 
-		if( strpos($url, ':') !== false ) {
-			// we have a port;
-			preg_match('/(\:([0-9]*))/', $url, $matches);
-			$port = $matches[2];
+		// if( strpos($url, ':') !== false ) {
+		// 	// we have a port;
+		// 	preg_match('/(\:([0-9]*))/', $url, $matches);
+		// 	$port = $matches[2];
 
-			$url = str_replace($matches[1], '', $url);
-			curl_setopt($ch, CURLOPT_PORT, $port);
-		}
+		// 	$url = str_replace($matches[1], '', $url);
+		// 	curl_setopt($ch, CURLOPT_PORT, $port);
+		// }
 
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -160,6 +160,8 @@ class RestClient {
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
     	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 		curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		// curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
 
 		if( count($this->headers) ) {
 			curl_setopt(
