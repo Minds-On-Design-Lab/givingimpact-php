@@ -26,13 +26,13 @@ For more about Giving Impact and to view our full documentation and learning rea
 
 You will need a valid Giving Impact Account API key, accessible from the Account Settings area. 
     
-    <?php
+First, add the library.
 
     require_once "givingimpact-php/MODL/GivingImpact.php";
 
-    $gi = new \MODL\GivingImpact('MY-APPLICATION-NAME', 'MY_KEY');
+Second, create your namespace and set both a name for your site/application followed by your Giving Impact API key.
 
-    ?>
+    $gi = new \MODL\GivingImpact('MY-APPLICATION-NAME', 'MY_KEY');
 
 ## Available Methods
 
