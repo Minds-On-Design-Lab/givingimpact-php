@@ -3,9 +3,16 @@ givingimpact-php
 
 ## Overview
 
+A PHP library to interact with Giving Impact &trade;. Giving Impact is an online fundraising platform driven by a thoughtful API to allow designers and developers to deliver customized online donation experiences for Non-profits easily, affordable, and flexibly.
+
+For more about Giving Impact and to view our full documentation and learning reasources please visit [givingimpact.com](http://givingimpact.com)
+
+
+## Library Credits
+
 **Developed By:** Minds On Design Lab - http://mod-lab.com<br />
 **Version:** 1.0<br />
-**Copyright:** 2012 Minds On Design Lab<br />
+**Copyright:** 2012 - 2013 Minds On Design Lab<br />
 **License:** Licensed under the MIT license - Please refer to LICENSE<br />
 
 ## Requirements
@@ -14,6 +21,26 @@ givingimpact-php
 * PHP cURL with SSL support
 
 **Note:** This library will not work in PHP 5.2 and below.
+
+## Configuration
+
+You will need a valid Giving Impact Account API key, accessible from the Account Settings area. 
+    
+    <?php
+
+    require_once "givingimpact-php/MODL/GivingImpact.php";
+
+    $gi = new \MODL\GivingImpact('MY-APPLICATION-NAME', 'MY_KEY');
+
+    ?>
+
+## Available Methods
+
+The following is a list of available methods; however, for full details about each method, please refer to the [API Documentation](http://givingimpact.com/docs).
+
+## Docs
+
+Coming Soon
 
 ## Example
 
