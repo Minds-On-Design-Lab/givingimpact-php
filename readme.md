@@ -3,7 +3,7 @@ givingimpact-php
 
 ## Overview
 
-A PHP library to interact with Giving Impact &trade;. Giving Impact is an online fundraising platform driven by a thoughtful API to allow designers and developers to deliver customized online donation experiences for Non-profits easily, affordable, and flexibly.
+A PHP library to interact with Giving Impact&trade;. Giving Impact is an online fundraising platform driven by a thoughtful API to allow designers and developers to deliver customized online donation experiences for Non-profits easily, affordable, and flexibly.
 
 For more about Giving Impact and to view our full documentation and learning reasources please visit [givingimpact.com](http://givingimpact.com)
 
