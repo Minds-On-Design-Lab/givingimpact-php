@@ -208,6 +208,11 @@ class Campaign extends \MODL\GivingImpact\Model {
         return $donations;
     }
 
+    public function __donation() {
+        return $this->container->donation
+            ->campaign($this->id_token);
+    }
+
     /**
      * Stats computed property. Automatically fetches and processes stats
      * @return Array
