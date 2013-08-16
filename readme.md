@@ -24,8 +24,8 @@ For more about Giving Impact and to view our full documentation and learning rea
 
 ## Configuration
 
-You will need a valid Giving Impact Account API key, accessible from the Account Settings area. 
-    
+You will need a valid Giving Impact Account API key, accessible from the Account Settings area.
+
 First, add the library.
 
     require_once "givingimpact-php/MODL/GivingImpact.php";
@@ -70,7 +70,7 @@ Limit the number of results returned
 
     $campaigns = $gi->campaign
         ->limit(5);
-        
+
 **offset(int offset)**
 
 Skip a number of records, useful in combination with `limit` for pagination
@@ -78,17 +78,17 @@ Skip a number of records, useful in combination with `limit` for pagination
     $campaigns = $gi->campaign
         ->limit(10)
         ->offset(5);
-        
+
 **sort(string sort_by)**
 
 Sort the returned results. By default will sort by the provided property ascending. You can change the sort direction by appending `|desc` to the end of the property.
 
     $campaigns = $gi->campaign
         ->sort('created_at');  // Sorts by created time ASCENDING
-        
+
     $campaigns = $gi->campaign
         ->sort('created_at|desc'); // Sorts by created time DESCENDING
-        
+
 **status(boolean stats)**
 
 Get only campaigns/opportunites of a particular status. By default the API returns only items with a status of `active`. Can be `active`, `inactive` or `both`.
@@ -104,16 +104,16 @@ This is the last method you call in any query. This tells the library to constru
         ->status('both')
         ->limit(10)
         ->fetch();
-        
+
     foreach( $campaigns as $campaign ) {
         echo $campaign->title;
     }
-    
+
 Passing a Campaign, Opportunity or Donation token (depending on the model) will return a specific campaign, opportunity or donation.
 
     $campaign = $gi->campaign
         ->fetch('123456');
-        
+
     $donation = $gi->donation
         ->fetch('987654');
 
@@ -169,14 +169,14 @@ For example
         'email_org_name'    => 'My Org'
     )
     $newCampaign->save();
-    
+
 **opportunities**
 
 Fetch Opportunities for this Campaign. Note, this is called is a property, not a method
 
     $campaign = $gi->campaign
         ->fetch('ABC123');
-        
+
     $opportunities = $campaign
         ->opportunities
         ->limit(10)
@@ -188,7 +188,7 @@ Fetch Donations for this Campaign. Note, this is called is a property, not a met
 
     $campaign = $gi->campaign
         ->fetch('ABC123');
-        
+
     $donations = $campaign
         ->donations
         ->limit(10)
@@ -200,7 +200,7 @@ Fetch Stats for this Campaign. Note, this is called is a property, not a method
 
     $campaign = $gi->campaign
         ->fetch('ABC123');
-        
+
     $stats = $campaign
         ->stats
         ->limit(4)
@@ -233,7 +233,7 @@ For example
     $newOpportunity->description       = 'Check out my opportunity';
     $newOpportunity->donation_target   = '1000';
     $newOpportunity->save();
-    
+
 **campaign**
 
 Fetch this Opportunity's parent Campaign. Note, this is called is a property, not a method
@@ -241,14 +241,14 @@ Fetch this Opportunity's parent Campaign. Note, this is called is a property, no
     $campaign = $gi->opportunity
         ->fetch('ABC123')
         ->campaign;
-        
+
 **donations**
 
 Fetch Donations for this Opportunity. Note, this is called is a property, not a method
 
     $opportunity = $gi->opportunity
         ->fetch('ABC123');
-        
+
     $donations = $opportunity
         ->donations
         ->limit(10)
@@ -260,7 +260,7 @@ Fetch Stats for this Opportunity. Note, this is called is a property, not a meth
 
     $opportunity = $gi->opportunity
         ->fetch('ABC123');
-        
+
     $stats = $opportunity
         ->stats
         ->limit(4)
@@ -298,7 +298,7 @@ For example
     $newDonation->donation_total  = 25;
     $newDonation->donation_date   = time();
     $newDonation->save();
-    
+
 **campaign**
 
 Fetch this Donations's parent Campaign. Note, this is called is a property, not a method
@@ -318,7 +318,7 @@ Fetch this Donations's parent Opportunity, if it exists. Note, this is called is
 ### Stats
 
 Fetch Statistics for a Campaign or Opportunity
-    
+
 **campaign**
 
 Fetch this Stat log's parent Campaign. Note, this is called is a property, not a method
@@ -354,4 +354,5 @@ You can then copy the resulting files to your CodeIgniter application's `applica
 
 ## Changelog
 
+* 1.0 2013-08-15 - Added support for custom campaign fields
 * 1.0 - Initial Release
