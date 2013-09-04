@@ -160,8 +160,8 @@ class RestClient {
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
     	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 		curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		// curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
+    	curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__).'/cacert.pem');
+
 
 		if( count($this->headers) ) {
 			curl_setopt(

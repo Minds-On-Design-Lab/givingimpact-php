@@ -41,6 +41,7 @@ class Campaign extends \MODL\GivingImpact\Model {
     public $donation_levels = false;
     public $image_url = false;
     public $custom_fields = false;
+    public $campaign_fields = false;
     public $widget = false;
     public $header_font = false;
     public $campaign_color = false;

@@ -43,6 +43,7 @@ class Opportunity extends \MODL\GivingImpact\Model {
     public $donation_levels = false;
     public $image_url = false;
     public $custom_fields = false;
+    public $campaign_responses = false;
     public $widget = false;
     public $campaign = false;
     public $analytics_id = false;
