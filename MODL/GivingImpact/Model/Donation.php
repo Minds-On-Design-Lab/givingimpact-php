@@ -125,6 +125,10 @@ class Donation extends \MODL\GivingImpact\Model {
             }
         }
 
+        if( !array_key_exists('contact', $data) || !strlen($data['contact']) ) {
+            $data['contact'] = 0;
+        }
+
         if( $this->campaign_token ) {
             $data['campaign'] = $this->campaign_token;
         } elseif( $this->opporunity_token ) {
