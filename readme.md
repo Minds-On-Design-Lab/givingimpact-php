@@ -11,7 +11,7 @@ For more about Giving Impact and to view our full documentation and learning rea
 ## Library Credits
 
 **Developed By:** Minds On Design Lab - http://mod-lab.com<br />
-**Version:** 1.0<br />
+**Version:** 1.1<br />
 **Copyright:** 2012 - 2013 Minds On Design Lab<br />
 **License:** Licensed under the MIT license - Please refer to LICENSE<br />
 
