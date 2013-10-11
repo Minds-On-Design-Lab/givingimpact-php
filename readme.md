@@ -355,58 +355,27 @@ You can then copy the resulting files to your CodeIgniter application's `applica
 
 ## Custom Checkout for Donations
 
-This approach gives you incredible flexibility to integrate checkout into your online fundraising experience. There are a collection of requirements to enable your checkout form as detailed below; however, how you build and integrate your form is up to you. In collaboration with our payment processor, Stripe.com, there is a particular setup for credit card processing which ensure consistency of security with our hosted option and in line with Stripe’s requirements that in turn greatly lesson the security compliance of you.
+This approach gives you incredible flexibility to integrate checkout into your online fundraising experience. There are a collection of requirements to enable your checkout form as detailed below; however, how you build and integrate your form is up to you. In collaboration with our payment processor, Stripe.com, there is a particular setup for credit card processing which ensure consistency of security with our hosted option and in line with Stripe’s requirements that in turn greatly lesson the security compliance burden for you.
 
-This setup ensures that Credit Card data does not touch your server (let alone Giving Impacts) on its way to Stripe.com.
+In short, this setup ensures that credit card data does not touch your server (let alone Giving Impact’s) on its way to Stripe.com.
 
 
-#####cc_number
-**required**, valid credit card number
-
-#####cc_exp
-**required**, *MM/YYYY* expiration date
-
-#####cc_cvc
-**required**, valid CVC number from back of card
-
-#####campaign -or- opportunity
-**required**, *string*, unique identifier for the parent campaign or opportunity
-
-#####donation_date
-timestamp, *YYYY-MM-DD HH:MM:SS*, time of donation
-
-#####first_name
-**required**, *string*, donor first name
-
-#####last_name
-**required**, *string*, donor last name
-
-#####billing_address1
-**required**, *string*, billing address
-
-#####billing_city
-**required**, *string*, billing city
-
-#####billing_state
-**required**, *string*, state
-
-#####billing_postal_code
-**required**, *string*, billing postal code
-
-#####billing_country
-**required**, *string*, billing country
-
-#####donation_total
-**required**, *signed int*, donation amount. **donation amount must be 5 or the campaign donation miniumum amount, whichever is greater
-**
-#####donation_level
-**string**, this represents the label of a donation level
-
-#####contact
-**required**, boolean, true/false, default false, used to define if donor opted out of being contacted by email
-
-#####email_address
-**required**, string, email address of donor
+* cc_number **required**, valid credit card number
+* cc_exp **required**, *MM/YYYY* expiration date
+* cc_cvc **required**, valid CVC number from back of card
+* campaign -or- opportunity **required**, *string*, unique identifier for the parent campaign or opportunity
+* donation_date timestamp, *YYYY-MM-DD HH:MM:SS*, time of donation
+* first_name **required**, *string*, donor first name
+* last_name **required**, *string*, donor last name
+* billing_address1 **required**, *string*, billing address
+* billing_city **required**, *string*, billing city
+* billing_state **required**, *string*, state
+* billing_postal_code **required**, *string*, billing postal code
+* billing_country **required**, *string*, billing country
+* donation_total **required**, *signed int*, donation amount. **donation amount must be 5 or the campaign donation miniumum amount, whichever is greater
+* donation_level **string**, this represents the label of a donation level
+* contact **required**, boolean, true/false, default false, used to define if donor opted out of being contacted by email
+* email_address **required**, string, email address of donor
 
 ### Credit Card Processing Requirements
 1. You MUST host your custom checkout page under SSL
@@ -417,31 +386,27 @@ timestamp, *YYYY-MM-DD HH:MM:SS*, time of donation
 
 ### How it works
 
-1. Collect the donation information in your form in your form
-2. Pass the credit card information to Giving Impact's checkout javascript method to generate a Stripe payment token.  Giving Impact's API passes the CC info to Stripe for validation.  If the credit card validation fails for any reason, the API will return an error.
-3. Append the payment token to the form on success & submit the form
+**Preliminary Credit Card Processing**
 
-    <script type="text/javascript" src="http://api.givingimpact.com/v2/checkout?key=MY_PUBLIC_KEY"></script>
-    <script>
-    $(function() {
-      $('#process-donation').click(function(e) {
-          e.preventDefault();
-          $(this).text('Processing...');
-          $(this).attr('disabled', true);
-      
-          GIAPI.checkout({
-              'card':     $('[name="cc_number"]').val(),
-              'cvc':      $('[name="cc_cvc"]').val(),
-              'month':    $('[name="cc_exp"]').val().substr(0,2),
-              'year':     $('[name="cc_exp"]').val().substr(5,4),
-          }, function(token) {
-              // the card token is returned, append to form and submit
-              $('#donate-form').append($('<input type="hidden" value="'+token+'" name="token" />'));
-              $('#donate-form').submit();
-          });
-      });
-    });
-    </script>
+1. Collect the donation and billing information.
+2. Pass the credit card information to Giving Impact’s checkout javascript method that coordinates with Stripe to make sure required credit card data is provided and appears valid. If it passes basic validation then Stripe provides a payment token in return.
+
+**Donation and Full Credit Card Processing**
+
+1. Post the donation, billing, and Stripe’s payment token to the /donations API method.
+2. If the credit card or any Giving Impact data fails validation for any reason, the API will return an appropriate error.
+3. If successful, then the donation is saved and full donation data is returned.
+
+###Preliminary Credit Card Processing Requirements/Approach
+* You MUST host your custom checkout page under SSL
+* You need to include our Checkout Javascript and pass your Giving Impact Public API Key (available in Account Settings in the Dashboard).
+* Form input name for your Credit Card Number, Expiration Date, and CVC number must be set to what is showcased in the example below.
+* Expiration data must be in the form of MM/YYYY
+*)We’re big fans of Stripe’s [jQuery.payments library](https://stripe.com/blog/jquery-payment) to help improve your credit card forms.
+
+This approach checks that credit card data is well formed, communicates when it is not, and creates a Stripe payment token when it is. This token is what is posted along with other required data to our API and helps to ensure that credit card data never hits your server, let alone ours. The token has all the necessary data encrypted within it for Stripe to read and process.
+
+The code example below details the bullets above.
 
 
 ## Donation Form Example
@@ -579,11 +544,43 @@ timestamp, *YYYY-MM-DD HH:MM:SS*, time of donation
 
       </body>
     </html>
+    
+### Donation and Full Credit Card Processing
+You can create a new donation by sending a POST request to the following URI.
+
+<code>/donations</code>
+
+In addition to the authentication and user-agent headers, the following header is also required for POST requests:
+
+<code>Content-Type: application/json</code>
+
+**Example Post Body**
+
+  {
+    "campaign": "1234abcde",
+    "donation_date": "2013-05-16 20:00:00",
+    "first_name": "Greedo",
+    "last_name": "TheElder",
+    "billing_address1": "100 Best Spot",
+    "billing_city": "Mos Eisley Cantina",
+    "billing_state": "Tatooine",
+    "billing_postal_code": "10001",
+    "billing_country": "United States",
+    "donation_total": "50.00",
+    "donation_level": "",
+    "contact": true,
+    "email_address": "greedo@givingimpact.com",
+    "card": "1234somelongtokenfromstripetostripe"
+  }
+
+    
+### Implementation Notes/Tips
+Please see [Giving Impact's Docs](http://givingimpact.com/docs/api/donation-checkout) for implementation notes & tips
 
 
 
 ## Changelog
 
-
+* 1.1 2013-10-14 - Custom checkout method
 * 1.0 2013-08-15 - Added support for custom campaign fields
 * 1.0 - Initial Release
