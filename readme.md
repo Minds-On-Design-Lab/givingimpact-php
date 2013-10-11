@@ -556,22 +556,22 @@ In addition to the authentication and user-agent headers, the following header i
 
 **Example Post Body**
 
-  {
-    "campaign": "1234abcde",
-    "donation_date": "2013-05-16 20:00:00",
-    "first_name": "Greedo",
-    "last_name": "TheElder",
-    "billing_address1": "100 Best Spot",
-    "billing_city": "Mos Eisley Cantina",
-    "billing_state": "Tatooine",
-    "billing_postal_code": "10001",
-    "billing_country": "United States",
-    "donation_total": "50.00",
-    "donation_level": "",
-    "contact": true,
-    "email_address": "greedo@givingimpact.com",
-    "card": "1234somelongtokenfromstripetostripe"
-  }
+<code>{
+  "campaign": "1234abcde",
+  "donation_date": "2013-05-16 20:00:00",
+  "first_name": "Greedo",
+  "last_name": "TheElder",
+  "billing_address1": "100 Best Spot",
+  "billing_city": "Mos Eisley Cantina",
+  "billing_state": "Tatooine",
+  "billing_postal_code": "10001",
+  "billing_country": "United States",
+  "donation_total": "50.00",
+  "donation_level": "",
+  "contact": true,
+  "email_address": "greedo@givingimpact.com",
+  "card": "1234somelongtokenfromstripetostripe"
+}</code>
 
     
 ### Implementation Notes/Tips
