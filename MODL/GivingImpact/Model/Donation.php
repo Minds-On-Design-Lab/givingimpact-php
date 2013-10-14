@@ -133,6 +133,8 @@ class Donation extends \MODL\GivingImpact\Model {
             $data['opporunity'] = $this->opporunity_token;
         }
 
+        $data['contact'] = $data['contact'] ? '1' : '0';
+
         if( !is_array($data) ) {
             throw new GIException('Expected array');
             return;
