@@ -125,6 +125,8 @@ class Donation extends \MODL\GivingImpact\Model {
             }
         }
 
+        $data['contact'] = $this->contact ? '1' : '0';
+
         if( $this->campaign_token ) {
             $data['campaign'] = $this->campaign_token;
         } elseif( $this->opporunity_token ) {
