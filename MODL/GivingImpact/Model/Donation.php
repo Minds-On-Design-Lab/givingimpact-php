@@ -173,6 +173,8 @@ class Donation extends \MODL\GivingImpact\Model {
             $data[$prop] = $this->$prop;
         }
 
+        $data['contact'] = $data['contact'] ? '1' : '0';
+
         $rc = $this->container->restClient;
         $rc->url = sprintf(
             '%s/v2/donations/%s', $rc->url, $this->id_token
