@@ -373,7 +373,7 @@ In short, this setup ensures that credit card data does not touch your server (l
 * billing_postal_code **required**, *string*, billing postal code
 * billing_country **required**, *string*, billing country
 * donation_total **required**, *signed int*, donation amount. **donation amount must be 5 or the campaign donation miniumum amount, whichever is greater
-* donation_level **string**, this represents the label of a donation level
+* donation_level_id **integer**, this represents the label of a donation level
 * contact **required**, boolean, true/false, default false, used to define if donor opted out of being contacted by email
 * email_address **required**, string, email address of donor
 
@@ -567,7 +567,7 @@ In addition to the authentication and user-agent headers, the following header i
       "billing_postal_code": "10001",
       "billing_country": "United States",
       "donation_total": "50.00",
-      "donation_level": "",
+      "donation_level_id": "101",
       "contact": true,
       "email_address": "greedo@givingimpact.com",
       "card": "1234somelongtokenfromstripetostripe"
