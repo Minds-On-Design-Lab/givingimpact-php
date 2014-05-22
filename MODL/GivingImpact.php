@@ -35,6 +35,7 @@ use MODL\GivingImpact\Model\Campaign as Campaign;
 use MODL\GivingImpact\Model\Opportunity as Opportunity;
 use MODL\GivingImpact\Model\Donation as Donation;
 use MODL\GivingImpact\Model\Stats as Stats;
+use MODL\GivingImpact\Model\Supporter as Supporter;
 
 require_once dirname(__FILE__).'/GivingImpact/Exception.php';
 require_once dirname(__FILE__).'/GivingImpact/RestClient.php';
@@ -44,6 +45,7 @@ require_once dirname(__FILE__).'/GivingImpact/Model/Campaign.php';
 require_once dirname(__FILE__).'/GivingImpact/Model/Opportunity.php';
 require_once dirname(__FILE__).'/GivingImpact/Model/Donation.php';
 require_once dirname(__FILE__).'/GivingImpact/Model/Stats.php';
+require_once dirname(__FILE__).'/GivingImpact/Model/Supporter.php';
 
 /**
  * GivingImpact library base class, also provides dependency injector
@@ -119,6 +121,9 @@ class GivingImpact {
 		};
 		$this->stats = function($_) {
 			return new Stats($_);
+		};
+		$this->supporter = function($_) {
+			return new Supporter($_);
 		};
 
 	}
