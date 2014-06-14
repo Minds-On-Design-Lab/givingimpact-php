@@ -33,7 +33,7 @@ class Supporter extends \MODL\GivingImpact\Model {
     public $donations_total = false;
     public $total_donations = false;
 
-	protected $path = false;
+	protected $path = 'v2/supporters';
 
     private $stack = array();
 
@@ -81,6 +81,33 @@ class Supporter extends \MODL\GivingImpact\Model {
 
 		return $out;
 	}
+
+    /**
+     * Save existing supporter
+     *
+     * @throws MODL\GivingImpact\Exception If ID_TOKEN is not set
+     * @return Object
+     */
+    public function save() {
+        if( !$this->id_token ) {
+            throw new GIException('Please use create method');
+            return;
+        }
+
+        $data = array();
+        foreach( $this->publicProperties() as $prop ) {
+            $data[$prop] = $this->$prop;
+        }
+
+        $rc = $this->container->restClient;
+        $rc->url = sprintf(
+            '%s/%s/%s', $rc->url, $this->path, $this->id_token
+        );
+
+        $return = $rc->post($data);
+
+        return new $this($this->container, $return->supporter);
+    }
 
     /**
      * Donations computed property. Automatically fetches and processes donations
