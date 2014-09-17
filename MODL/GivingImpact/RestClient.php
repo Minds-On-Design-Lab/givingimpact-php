@@ -49,6 +49,12 @@ class RestClient {
 	private $container = false;
 
 	/**
+	 * Debug Mode
+	 * @var boolean
+	 */
+	private $debug = false;
+
+	/**
 	 * Constructor
 	 * @param Object $c Dependency injector
 	 */
@@ -97,6 +103,10 @@ class RestClient {
 		$raw_json = $this->curlFetch();
 		$data = json_decode($raw_json);
 
+		if( !$data ) {
+			throw new GIException('Unable to connect to Giving Impact API');
+			return;
+		}
 		if( $data->error ) {
 			throw new GIException($data->message);
 			return;
@@ -144,6 +154,11 @@ class RestClient {
 		$url = $this->url;
 
 		$ch = curl_init();
+		$verbose = $this->debug ? fopen('php://temp', 'rw+') : false;
+
+		if( $verbose ) {
+			curl_setopt($ch, CURLOPT_STDERR, $verbose);
+		}
 
 		// if( strpos($url, ':') !== false ) {
 		// 	// we have a port;
@@ -153,14 +168,16 @@ class RestClient {
 		// 	$url = str_replace($matches[1], '', $url);
 		// 	curl_setopt($ch, CURLOPT_PORT, $port);
 		// }
-		
-		curl_setopt($ch, CURLOPT_URL, "https://". $url);
+		curl_setopt($ch, CURLOPT_VERBOSE, true);
+
+		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
     	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 		curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
     	curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__).'/cacert.pem');
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
 
 		if( count($this->headers) ) {
@@ -177,6 +194,21 @@ class RestClient {
 		}
 
 		$data = curl_exec($ch);
+
+		if( $verbose ) {
+			if( $data === false ) {
+				printf("cUrl error (#%d): %s<br>\n", curl_errno($ch),
+				htmlspecialchars(curl_error($ch)));
+
+				curl_close($ch);
+
+				rewind($verbose);
+				$verboseLog = stream_get_contents($verbose);
+
+				echo "Verbose information:\n<pre>", htmlspecialchars($verboseLog), "</pre>\n";
+				return false;
+			}
+		}
 
 		curl_close($ch);
 
