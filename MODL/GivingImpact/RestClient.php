@@ -153,11 +153,11 @@ class RestClient {
 		// 	$url = str_replace($matches[1], '', $url);
 		// 	curl_setopt($ch, CURLOPT_PORT, $port);
 		// }
-
-		curl_setopt($ch, CURLOPT_URL, $url);
+		
+		curl_setopt($ch, CURLOPT_URL, "https://". $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
     	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 		curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
     	curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__).'/cacert.pem');

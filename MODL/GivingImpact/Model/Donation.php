@@ -31,7 +31,7 @@ class Donation extends \MODL\GivingImpact\Model {
     public $billing_postal_code = false;
     public $billing_country = false;
     public $donation_total = false;
-    public $donation_level = false;
+    public $donation_level_id = false;
     public $contact = false;
     public $email_address = false;
     public $referrer = false;
@@ -125,11 +125,15 @@ class Donation extends \MODL\GivingImpact\Model {
             }
         }
 
+        $data['contact'] = $this->contact ? '1' : '0';
+
         if( $this->campaign_token ) {
             $data['campaign'] = $this->campaign_token;
         } elseif( $this->opporunity_token ) {
             $data['opporunity'] = $this->opporunity_token;
         }
+
+        $data['contact'] = $data['contact'] ? '1' : '0';
 
         if( !is_array($data) ) {
             throw new GIException('Expected array');
