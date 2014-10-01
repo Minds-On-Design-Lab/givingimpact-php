@@ -152,6 +152,9 @@ class RestClient {
 		}
 
 		$url = $this->url;
+		if( strpos($url, 'http') === false ) {
+			$url = 'https://'.$url;
+		}
 
 		$ch = curl_init();
 		$verbose = $this->debug ? fopen('php://temp', 'rw+') : false;
