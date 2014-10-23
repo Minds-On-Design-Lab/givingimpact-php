@@ -70,10 +70,14 @@ class GivingImpact {
 	 * @param String $user_agent
 	 * @param String $api_key
 	 */
-	public function __construct($user_agent, $api_key) {
+	public function __construct($user_agent, $api_key, $end_point = false) {
 
 		$this->user_agent = $user_agent;
 		$this->api_key = $api_key;
+
+		if( $end_point ) {
+			$this->end_point = $end_point;
+		}
 
 		if( !function_exists('curl_init') ) {
 			throw new GIException('CURL extension is required');
