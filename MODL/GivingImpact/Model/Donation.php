@@ -44,6 +44,7 @@ class Donation extends \MODL\GivingImpact\Model {
     public $custom_responses = false;
     public $donation_date = false;
     public $card = false;
+    public $refunded = false;
 
 	protected $path = false;
 
