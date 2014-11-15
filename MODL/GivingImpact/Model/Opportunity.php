@@ -48,12 +48,22 @@ class Opportunity extends \MODL\GivingImpact\Model {
     public $campaign = false;
     public $analytics_id = false;
 
+    public $supporter_email_address = false;
+    public $supporter_first_name = false;
+    public $supporter_last_name = false;
+    public $supporter_street_address = false;
+    public $supporter_city = false;
+    public $supporter_state = false;
+    public $supporter_postal_code = false;
+    public $supporter_country = false;
+
     public $image_type = false;
     public $image_file = false;
 
 	protected $path = 'v2/opportunities';
 
     private $stack = array();
+    private $supporter_token;
 
 	public function __construct($c, $data = false) {
 		$this->container = $c;
@@ -215,6 +225,17 @@ class Opportunity extends \MODL\GivingImpact\Model {
         $this->stack['stats'] = $stats;
 
         return $stats;
+    }
+
+    /**
+     * Set parent supporter
+     * @param  String $token
+     * @return Object        this
+     */
+    public function supporter($token) {
+        $this->supporter_token = $token;
+
+        return $this;
     }
 
     public function __get($k) {
