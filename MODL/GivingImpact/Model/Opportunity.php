@@ -48,12 +48,15 @@ class Opportunity extends \MODL\GivingImpact\Model {
     public $campaign = false;
     public $analytics_id = false;
 
+    public $supporters = false;
+
     public $image_type = false;
     public $image_file = false;
 
 	protected $path = 'v2/opportunities';
 
     private $stack = array();
+    private $supporter_token;
 
 	public function __construct($c, $data = false) {
 		$this->container = $c;
@@ -142,17 +145,27 @@ class Opportunity extends \MODL\GivingImpact\Model {
             return new $this($this->container, $data->opportunity);
 		}
 
-        if( !$this->campaign_token ) {
-            throw new GIException('Parent campaign token required');
-            return;
+        if( $this->supporter_token ) {
+            $rc = $this->container->restClient;
+            $rc->url = sprintf(
+                '%s/v2/supporters/%s/opportunities',
+                $rc->url,
+                $this->supporter_token
+            );
+        } elseif( $this->campaign_token ) {
+            $rc = $this->container->restClient;
+            $rc->url = sprintf(
+                '%s/v2/campaigns/%s/opportunities',
+                $rc->url,
+                $this->campaign_token
+            );
+        } else {
+            $rc = $this->container->restClient;
+            $rc->url = sprintf(
+                '%s/v2/opportunities',
+                $rc->url
+            );
         }
-
-		$rc = $this->container->restClient;
-		$rc->url = sprintf(
-		    '%s/v2/campaigns/%s/opportunities',
-		    $rc->url,
-		    $this->campaign_token
-		);
 
 		$data = $rc->get($this->properties);
 		$out = array();
@@ -174,6 +187,11 @@ class Opportunity extends \MODL\GivingImpact\Model {
 
 	    return $this;
 	}
+
+    public function __donation() {
+        return $this->container->donation
+            ->opportunity($this->id_token);
+    }
 
     /**
      * Donations computed property
@@ -215,6 +233,21 @@ class Opportunity extends \MODL\GivingImpact\Model {
         $this->stack['stats'] = $stats;
 
         return $stats;
+    }
+
+    /**
+     * Set parent supporter
+     * @param  String $token
+     * @return Object        this
+     */
+    public function supporter($token) {
+        if( strpos($token, '@') !== false ) {
+            $this->properties['email'] = $token;
+        } else {
+            $this->supporter_token = $token;
+        }
+
+        return $this;
     }
 
     public function __get($k) {
