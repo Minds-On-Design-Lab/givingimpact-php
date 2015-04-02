@@ -11,8 +11,8 @@ For more about Giving Impact and to view our full documentation and learning rea
 ## Library Credits
 
 **Developed By:** Minds On Design Lab - http://mod-lab.com<br />
-**Version:** 1.1<br />
-**Copyright:** 2012 - 2013 Minds On Design Lab<br />
+**Version:** 1.2<br />
+**Copyright:** 2012 - 2015 Minds On Design Lab<br />
 **License:** Licensed under the MIT license - Please refer to LICENSE<br />
 
 ## Requirements
@@ -133,7 +133,7 @@ Create a new campaign. Simply set the properties of a new campaign object to any
  * title **REQUIRED**
  * description **REQUIRED**
  * youtube_id
- * donation_target **REQUIRED**
+ * donation_target (in cents) **REQUIRED**
  * hash_tag
  * status
  * has_giving_opportunities
@@ -166,7 +166,7 @@ For example
     $newCampaign = $gi->campaign;
     $newCampaign->title             = 'My campaign';
     $newCampaign->description       = 'Check out my campaign';
-    $newCampaign->donation_target   = '1000';
+    $newCampaign->donation_target   = '100000';
     $newCampaign->image_type        = 'image/jpg';
     $newCampaign->image_file        = '[BASE64 ENCODED STRING]';
     $newCampaign->receipt           = array
@@ -223,20 +223,39 @@ Create a new opportunity. Simply set the properties of a new opportunity object 
   * title **REQUIRED**
   * description **REQUIRED**
   * youtube_id
-  * donation_target **REQUIRED**
+  * donation_target **REQUIRED** in cents
   * hash_tag
   * status
   * image_url
   * campaign
   * image_type
   * image_file
+  * supporters Array of supporters containing:
+    * email_address **REQUIRED**
+    * first_name
+    * last_name
+    * street_address
+    * city
+    * state
+    * postal_code
+    * country
 
 For example
 
     $newOpportunity = $gi->opportunity;
     $newOpportunity->title             = 'My new giving opp';
     $newOpportunity->description       = 'Check out my opportunity';
-    $newOpportunity->donation_target   = '1000';
+    $newOpportunity->donation_target   = '100000';
+    $newOpportunity->supporters        = array(
+      array(
+        'email_address' => 'foo@example.com'
+      ),
+      array(
+        'email_Address' => 'bar@example.com',
+        'first_name'    => 'Bar',
+        'last_name'     => 'Bazerson'
+      )
+    );
     $newOpportunity->save();
 
 **campaign**
@@ -271,6 +290,16 @@ Fetch Stats for this Opportunity. Note, this is called is a property, not a meth
         ->limit(4)
         ->fetch();
 
+**supporter**
+
+Fetch opportunities based on supporter token or email address, called as a method
+
+      $opportunities = $gi->opportunity
+        ->supporter('foo@example.com')
+        ->limit(4)
+        ->related(true)
+        ->fetch();
+
 ### Donations
 
 Specific methods for Donations
@@ -286,7 +315,7 @@ Create a new **offline** donation.
   * billing_state
   * billing_postal_code
   * billing_country
-  * donation_total **Must be 5 or the campaign/opportunity minimum donation amount**
+  * donation_total (in cents) **Must be greater of 500 or the campaign/opportunity minimum donation amount**
   * contact
   * email_address
   * offline
@@ -300,7 +329,7 @@ For example
     $newDonation->first_name      = 'Test';
     $newDonation->last_name       = 'Testerson';
     $newDonation->offline         = TRUE;
-    $newDonation->donation_total  = 25;
+    $newDonation->donation_total  = 2500;
     $newDonation->donation_date   = time();
     $newDonation->save();
 
@@ -319,6 +348,15 @@ Fetch this Donations's parent Opportunity, if it exists. Note, this is called is
     $campaign = $gi->donation
         ->fetch('ABC123')
         ->opportunity;
+
+**supporter**
+
+Fetch donations based on supporter token or email address, called as a method
+
+      $donations = $gi->donation
+        ->supporter('foo@example.com')
+        ->fetch();
+
 
 ### Supporters
 
@@ -392,7 +430,7 @@ In short, this setup ensures that credit card data does not touch your server (l
 * billing_state **required**, *string*, state
 * billing_postal_code **required**, *string*, billing postal code
 * billing_country **required**, *string*, billing country
-* donation_total **required**, *signed int*, donation amount. **donation amount must be 5 or the campaign donation miniumum amount, whichever is greater
+* donation_total (in cents) **required**, *signed int*, donation amount. **donation amount must be greater of 500 or the campaign donation miniumum amount, whichever is greater
 * donation_level_id **integer**, this represents the id of a donation level
 * contact **required**, boolean, true/false, default false, used to define if donor opted out of being contacted by email
 * email_address **required**, string, email address of donor
@@ -586,7 +624,7 @@ In addition to the authentication and user-agent headers, the following header i
       "billing_state": "Tatooine",
       "billing_postal_code": "10001",
       "billing_country": "United States",
-      "donation_total": "50.00",
+      "donation_total": "5000",
       "donation_level_id": "101",
       "contact": true,
       "email_address": "greedo@givingimpact.com",
@@ -595,12 +633,13 @@ In addition to the authentication and user-agent headers, the following header i
 
 
 ### Implementation Notes/Tips
-Please see [Giving Impact's Docs](http://givingimpact.com/docs/api/donation-checkout) for implementation notes & tips
+Please see [Giving Impact's Docs](https://github.com/Minds-On-Design-Lab/Giving-Impact-API/blob/master/sections/donation-checkout.md) for implementation notes & tips
 
 
 
 ## Changelog
 
+* 1.2 2015-04-01 - Updated supporter integrations, updated donation examples for whole number values, updated links
 * 1.1 2013-10-14 - Custom checkout method
 * 1.0 2013-08-15 - Added support for custom campaign fields
 * 1.0 - Initial Release
