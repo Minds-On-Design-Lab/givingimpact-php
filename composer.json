@@ -6,6 +6,14 @@
         {
             "name": "Mike Joseph",
             "email": "mikej@mod-lab.com"
+        },
+        {
+            "name": "Keston Helfrich",
+            "email": "kestonh@mod-lab.com"
+        },
+        {
+            "name": "Seth Giammanco",
+            "email": "seth@mod-lab.com"
         }
     ],
     "minimum-stability": "dev",
