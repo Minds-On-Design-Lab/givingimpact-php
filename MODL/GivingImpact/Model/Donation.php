@@ -95,7 +95,7 @@ class Donation extends \MODL\GivingImpact\Model {
                 $rc->url,
                 $this->supporter_token
             );
-        } elseif( array_key_exists('supporter', $this->properties) && $this->properties['supporter'] ) {
+        } elseif( array_key_exists('supporter', $this->properties) && $this->properties['supporter'] && !$this->opportunity_token ) {
             $rc->url = sprintf(
                 '%s/v2/donations',
                 $rc->url
