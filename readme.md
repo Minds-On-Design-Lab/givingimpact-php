@@ -11,8 +11,8 @@ For more about Giving Impact and to view our full documentation and learning rea
 ## Library Credits
 
 **Developed By:** Minds On Design Lab - http://mod-lab.com<br />
-**Version:** 1.2<br />
-**Copyright:** 2012 - 2015 Minds On Design Lab<br />
+**Version:** 1.3<br />
+**Copyright:** 2012 - 2016 Minds On Design Lab<br />
 **License:** Licensed under the MIT license - Please refer to LICENSE<br />
 
 ## Requirements
@@ -148,6 +148,8 @@ Create a new campaign. Simply set the properties of a new campaign object to any
  * analytics_id
  * image_type
  * image_file
+ * frequency_type
+ * frequency_period
  * receipt
    * send_receipt
    * email_org_name
@@ -434,6 +436,7 @@ In short, this setup ensures that credit card data does not touch your server (l
 * donation_level_id **integer**, this represents the id of a donation level
 * contact **required**, boolean, true/false, default false, used to define if donor opted out of being contacted by email
 * email_address **required**, string, email address of donor
+* allow_recurring, boolean, true/false, default false, used to define if donor wants donation to reoccur
 
 ### Credit Card Processing Requirements
 1. You MUST host your custom checkout page under SSL
@@ -639,6 +642,7 @@ Please see [Giving Impact's Docs](https://github.com/Minds-On-Design-Lab/Giving-
 
 ## Changelog
 
+* 1.3 2015-12-16 - Recurring donation support
 * 1.2 2015-04-01 - Updated supporter integrations, updated donation examples for whole number values, updated links
 * 1.1 2013-10-14 - Custom checkout method
 * 1.0 2013-08-15 - Added support for custom campaign fields

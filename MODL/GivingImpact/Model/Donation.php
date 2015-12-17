@@ -46,6 +46,8 @@ class Donation extends \MODL\GivingImpact\Model {
     public $card = false;
     public $refunded = false;
 
+    public $allow_recurring = false;
+
 	protected $path = false;
 
     private $stack = array();

@@ -59,6 +59,8 @@ class Campaign extends \MODL\GivingImpact\Model {
     // public $receipt_body = false;
     public $analytics_id = false;
     public $receipt = false;
+    public $frequency_type = false;
+    public $frequency_period = false;
 
     public $image_type = false;
     public $image_file = false;
